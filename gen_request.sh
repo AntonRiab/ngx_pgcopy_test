@@ -5,8 +5,8 @@ HEADERPART=$(printf "PUT /pub HTTP/1.1
 Host: 127.0.0.1")
 
 if [ $# -gt 1 ];then
-    echo "Add part"
-    exit
+    authpass=$(echo "$2" | base64)
+    HEADERPART=$(printf "$HEADERPART\nAuthorization: Basic ${authpass}\n")
 fi
 
 printf "${HEADERPART}

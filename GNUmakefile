@@ -1,7 +1,7 @@
 CDIR:=$(shell pwd)
 
 all: 
-	@make 003k.diff; make 1k.diff; make 3k.diff; make result
+	@make 003k.diff; make 1k.diff; make 3k.diff; make priv.diff; make result
 
 truncate:
 	@su postgres -c "psql -d ngx_pgcopy_test_db -c 'TRUNCATE TABLE input_test;'" || su postgres -c "psql -d postgres -f psql.init" 2>/dev/null
@@ -33,6 +33,10 @@ put3k: truncate 3k.data
 	@echo "Send $@"
 	@$(shell sh gen_request.sh 3k.data | nc 127.0.0.1 8080)
 
+putpriv: truncate 003k.data
+	@echo "Send $@"
+	@$(shell sh gen_request.sh 003k.data "ngx_pgcopy_test_usr:123" | nc 127.0.0.1 8080)
+
 ##############################
 003k.out: put003k
 	@curl -f "http://127.0.0.1:8080/pub" -o 003k.out 2> /dev/null; exit 0
@@ -41,6 +45,9 @@ put3k: truncate 3k.data
 	@curl -f "http://127.0.0.1:8080/pub" -o 1k.out 2> /dev/null; exit 0
 
 3k.out: put3k
+	@curl -f "http://127.0.0.1:8080/pub" -o 3k.out 2> /dev/null; exit 0
+
+priv.out: putpriv
 	@curl -f "http://127.0.0.1:8080/pub" -o 3k.out 2> /dev/null; exit 0
 
 ##############################
@@ -52,6 +59,9 @@ put3k: truncate 3k.data
 
 3k.diff: 3k.out
 	@diff 3k.data 3k.out > 3k.diff
+
+priv.diff: priv.out
+	@diff 003k.data priv.out > priv.diff
 ##############################
 result:
 	@ls -l | awk '/diff/{ if($$5 == "0")print "ok   ", $$9; else print "error", $$9}'
