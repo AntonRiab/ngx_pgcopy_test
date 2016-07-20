@@ -11,3 +11,4 @@ CREATE TABLE input_test (
 DROP USER IF EXISTS ngx_pgcopy_test_usr;
 CREATE USER ngx_pgcopy_test_usr WITH PASSWORD '123';
 GRANT ALL PRIVILEGES ON DATABASE ngx_pgcopy_test_db TO ngx_pgcopy_test_usr;
+GRANT ALL ON input_test TO ngx_pgcopy_test_usr;
