@@ -23,15 +23,15 @@ nginx:
 ##############################
 put003k: truncate 003k.data
 	@echo "Send $@"
-	@$(shell sh gen_request.sh 003k.data | nc 127.0.0.1 8080)
+	@$(shell sh gen_request.sh 003k.data | nc 127.0.0.1 8080 1> /dev/null)
 
 put1k: truncate 1k.data
 	@echo "Send $@"
-	@$(shell sh gen_request.sh 1k.data | nc 127.0.0.1 8080)
+	@$(shell sh gen_request.sh 1k.data | nc 127.0.0.1 8080 1> /dev/null)
 
 put3k: truncate 3k.data
 	@echo "Send $@"
-	@$(shell sh gen_request.sh 3k.data | nc 127.0.0.1 8080)
+	@$(shell sh gen_request.sh 3k.data | nc 127.0.0.1 8080 1> /dev/null)
 
 putpriv: truncate 003k.data
 	@echo "Send $@"
@@ -49,6 +49,9 @@ putpriv: truncate 003k.data
 
 priv.out: putpriv
 	@curl -f "http://127.0.0.1:8080/pub" -o 3k.out 2> /dev/null; exit 0
+
+putbad: 003k.data
+	@sh gen_request.sh 003k.data | sed 's/3;tt3/3;t;t/' | nc 127.0.0.1 8080
 
 ##############################
 003k.diff: 003k.out
