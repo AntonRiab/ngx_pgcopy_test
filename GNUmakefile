@@ -69,8 +69,11 @@ priv.diff: priv.out
 result:
 	@ls -l | awk '/diff/{ if($$5 == "0")print "ok   ", $$9; else print "error", $$9}'
 
-show:
+showtable:
 	@su postgres -c "psql -d ngx_pgcopy_test_db -c 'SELECT * FROM input_test;'"
+
+showput: 003k.data
+	@sh gen_request.sh 003k.data | nc 127.0.0.1 8080
 
 showget:
 	@printf "GET /pub HTTP/1.1\nHost: 127.0.0.1\n\n" | nc 127.0.0.1 8080
