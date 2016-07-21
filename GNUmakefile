@@ -69,6 +69,9 @@ result:
 show:
 	@su postgres -c "psql -d ngx_pgcopy_test_db -c 'SELECT * FROM input_test;'"
 
+showget:
+	@printf "GET /pub HTTP/1.1\nHost: 127.0.0.1\n\n" | nc 127.0.0.1 8080
+
 clean:
 	rm *.data *.diff *.get *~ *.out
 
