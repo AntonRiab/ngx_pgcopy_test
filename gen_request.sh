@@ -2,7 +2,8 @@ DATA=$(cat $1)
 LEN=$(printf "$DATA" | wc -c)
 
 HEADERPART=$(printf "PUT /pub HTTP/1.1
-Host: 127.0.0.1")
+Host: 127.0.0.1
+Connection: keep-alive")
 
 if [ $# -gt 1 ];then
     authpass=$(echo "$2" | base64)

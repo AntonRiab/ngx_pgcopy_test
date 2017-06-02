@@ -1,0 +1,7 @@
+PUT /csv/simple_data HTTP/1.1
+User-Agent: curl/7.35.0
+Host: 127.0.0.1:80
+Content-Length: 13
+
+0;zero
+1;one
